@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+
     <router-view></router-view>
     <main-tab-bar></main-tab-bar>
 
@@ -9,6 +10,7 @@
 <script>
     import router from "./router";
     import MainTabBar from "./components/content/mainTabBar/MainTabBar";
+
 
     export default {
       name: 'App',
@@ -21,5 +23,4 @@
 
 <style>
     @import "assets/css/style.css";
-
 </style>

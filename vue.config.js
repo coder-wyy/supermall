@@ -4,6 +4,9 @@ module.exports = {
             // 路径取别名：'@'就是src目录
             alias: {
                 'assets': '@/assets',
+                'components': '@/components',
+                'network': '@/network',
+                'views': '@/views'
             }
         }
     }
