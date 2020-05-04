@@ -23,6 +23,7 @@
             }
         },
         data() {
+            return {}
         },
         computed: {
             // 选中时，修改图片
