@@ -7,62 +7,20 @@
         <recommend-view :recommends="recommend"></recommend-view>
         <feature></feature>
         <tab-control class="tab-control" :titles="['流行', '新款', '精选']"></tab-control>
-        <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-            <li>9</li>
-            <li>0</li>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-            <li>9</li>
-            <li>0</li>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-            <li>9</li>
-            <li>0</li>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-            <li>9</li>
-            <li>0</li>
-        </ul>
-
+        <goods :goods="goods.new.data"></goods>
     </div>
 </template>
 
 <script>
-
     import HomeSwiper from "./childrenComponents/HomeSwiper";
     import RecommendView from "./childrenComponents/RecommendView";
     import Feature from "./childrenComponents/Feature";
 
     import NavBar from "components/common/navbar/NavBar";
     import TabControl from "components/content/tabControl/TabControl";
+    import Goods from "components/content/goods/Goods";
 
-    import {getHomeMultiData} from "network/home";
+    import {getHomeMultiData, getGoodsData} from "network/home";
 
 
     export default {
@@ -70,7 +28,12 @@
         data() {
           return {
               banner: [],
-              recommend: []
+              recommend: [],
+              goods: {
+                  new: {page: 0, data: []},
+                  sell: {page: 0, data: []},
+                  pop: {page: 0, data: []},
+              }
           }
         },
         components: {
@@ -78,18 +41,37 @@
             RecommendView,
             Feature,
             NavBar,
-            TabControl
+            TabControl,
+            Goods
         },
         created() {
-            getHomeMultiData()
-                .then(res=>{
-                    console.log(res);
-                    this.banner = res.data.banner.list;
-                    this.recommend = res.data.recommend.list;
-                })
-                .catch(error=>{
+            // 1. 请求轮播图数据
+            this.getHomeMultiData();
 
-                })
+            // 2. 请求商品数据
+            this.getGoodsData("sell");
+            this.getGoodsData("new");
+            this.getGoodsData("pop");
+        },
+        methods: {
+            getHomeMultiData() {
+                getHomeMultiData()
+                    .then(res => {
+                        this.banner = res.data.banner.list;
+                        this.recommend = res.data.recommend.list;
+                    })
+                    .catch(error => {})
+            },
+            getGoodsData(type) {
+                const page = this.goods[type].page + 1;
+                getGoodsData(type, page)
+                    .then(res => {
+                        console.log(res);
+                        this.goods[type].data = this.goods[type].data.concat(res.data.list);
+                        this.goods[type].page += 1;
+                    })
+                    .catch(error => {})
+            }
         }
     }
 </script>
@@ -113,5 +95,6 @@
     .tab-control {
         position: sticky;
         top: 44px;
+        z-index: 10;
     }
 </style>
