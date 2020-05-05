@@ -6,8 +6,8 @@
         <home-swiper :banners="banner"></home-swiper>
         <recommend-view :recommends="recommend"></recommend-view>
         <feature></feature>
-        <tab-control class="tab-control" :titles="['流行', '新款', '精选']"></tab-control>
-        <goods :goods="goods.new.data"></goods>
+        <tab-control @tabChange="goodsChange($event)" class="tab-control" :titles="category_map"></tab-control>
+        <goods :goods="goods[currentType].data"></goods>
     </div>
 </template>
 
@@ -33,7 +33,14 @@
                   new: {page: 0, data: []},
                   sell: {page: 0, data: []},
                   pop: {page: 0, data: []},
-              }
+              },
+              category_map: {
+                  pop: "流行",
+                  new: "新款",
+                  sell: "精选"
+              },
+              // 默认加载“流行”商品
+              currentType: "pop"
           }
         },
         components: {
@@ -66,11 +73,13 @@
                 const page = this.goods[type].page + 1;
                 getGoodsData(type, page)
                     .then(res => {
-                        console.log(res);
                         this.goods[type].data = this.goods[type].data.concat(res.data.list);
                         this.goods[type].page += 1;
                     })
                     .catch(error => {})
+            },
+            goodsChange(type) {
+                this.currentType = type;
             }
         }
     }

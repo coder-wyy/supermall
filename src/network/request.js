@@ -3,7 +3,7 @@ import axios from "axios"
 export function httpService(config) {
     // 1. 实例化axtios
     const instance = axios.create({
-        baseURL: "http://123.207.32.32:8000",
+        baseURL: "http://123.207.32.32:8000/",
         timeout: 50000
     });
 
